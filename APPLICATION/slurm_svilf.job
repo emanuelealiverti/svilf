@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --job-name=svilf
+#SBATCH --output=output_slurm.txt
+#SBATCH --error=output_err_slurm.txt
+#SBATCH --mem-per-cpu=8000
+#SBATCH -N 6 
+#SBATCH -n 6
+#SBATCH -c 1 
+
+rs=$(which Rscript)
+FILES=$(ls DATA)
+
+methods=(svilf svilf_ada)
+module load gcc/7.2.0
+
+for mm in ${methods[@]}; do
+	for f in ${FILES[@]}; do
+		echo "running $mm on $f"
+		srun -N 1 -n 1  $rs run_svilf.R $f $mm &
+	done
+done
+wait

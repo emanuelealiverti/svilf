@@ -12,14 +12,14 @@ scen = margs[2]
 
 (res_name = paste0(res_fold,"/Scen",scen,"_svilf_ada.RData"))
 
-require(svilf,lib.loc = "COMPILE/lib")
+require(svilf,lib.loc = "../lib")
 dir.create(res_fold,showWarnings = F)
 load(file_name)
 H = 4
 set.seed(seed)
 tmp = svilf(y_el-1, H = H, intercept=T,get_samples = 2500, prop = 2.0,
-	    opts = svilf_options(print_each = 2, tol = 1e-5, 
-				 maxit = 5000,svi.maxit_inner =100,sample_adaptive = T))
+	    opts = svilf_options(print_each = 2, tol = 1e-6, 
+				 maxit = 5000,svi.maxit_inner = 3,sample_adaptive = T))
 save(tmp, file=res_name)
 #++++++++++++++++++++
 # Compute predictions

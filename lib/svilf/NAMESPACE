@@ -1,3 +1,0 @@
-useDynLib(svilf)
-importFrom(Rcpp, evalCpp)
-exportPattern("^[[:alpha:]]+")
