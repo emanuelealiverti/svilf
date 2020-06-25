@@ -1,5 +1,5 @@
 svilf_options = function(maxit = 100L, print_each = 10L, tol = 1e-5, 
-			 svi.tau = 1.0, svi.kappa = 0.75, svi.maxit_inner = 300L, sample_adaptive = FALSE) {
+			 svi.tau = 1.0, svi.kappa = 0.75, svi.maxit_inner = 3L, sample_adaptive = FALSE) {
 	if(maxit < 1) stop("maxit should be at least 1")
 	svi.list = list(tau = svi.tau, kappa = svi.kappa, maxit_inner = svi.maxit_inner)
 	return(list(maxit = as.integer(maxit), 
