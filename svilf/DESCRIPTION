@@ -1,0 +1,13 @@
+Package: svilf
+Type: Package
+Title: Stratified stochastic variational inference for network factor model
+Version: 0.1
+Date: 2019-12-12
+Author: Emanuele Aliverti
+Maintainer: Emanuele Aliverti <aliverti@stat.unipd.it>
+Description: Stratified stochastic variational inference for network factor model
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.1), RcppArmadillo (>= 0.9800), Matrix, igraph
+LinkingTo: Rcpp, RcppArmadillo
+NeedsCompilation: yes
+Packaged: 2020-01-29 10:49:45 UTC; meme

@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --job-name=sim_slurm
+#SBATCH --output=output_slurm.txt
+#SBATCH --error=output_err_slurm.txt
+#SBATCH --mem-per-cpu=8000
+#SBATCH -N 24
+#SBATCH -n 24
+#SBATCH -c 1 
+
+scen=(1 2 3)
+# Potentially we could do with all of them, but below 500 is so fast that it becomes more expensive to call the different processes
+#nodes=(100 200 300 500 1000 2000 3000 5000)
+
+nodes=(1000 2000 3000 5000)
+rs=$(which Rscript)
+
+module load gcc/7.2.0
+for f in ${nodes[@]}; do
+	for n in ${scen[@]}; do
+		touch V$f/RESULTS/svilf$n.txt
+		touch V$f/RESULTS/svilf_ada$n.txt
+		touch V$f/RESULTS/vbg$n.txt
+
+		srun -N 1 -n 1 psrecord "$rs run_svilf.R $f $n" --log V$f/RESULTS/svilf$n.txt --interval 0.5 &
+		srun -N 1 -n 1 psrecord "$rs run_svilf_ada.R $f $n" --log V$f/RESULTS/svilf_ada$n.txt --interval 0.5 &
+			srun -N 1 -n 1 psrecord "$rs run_vbg_init.R $f $n" --log V$f/RESULTS/vbg$n.txt --interval 0.5 &
+	done
+done
+wait
