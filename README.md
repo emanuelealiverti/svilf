@@ -1,6 +1,6 @@
 # Svilf: Stratified stochastic variational inference for high-dimensional network factor model	
 
-This repository is associated with the article: Aliverti, E. and Russo, M. (2020). Stratified stochastic variational inference for high-dimensional network factor model \[[link](https://arxiv.org/abs/0000.000)\].
+This repository is associated with the article: Aliverti, E. and Russo, M. (2020). Stratified stochastic variational inference for high-dimensional network factor model \[[link](https://arxiv.org/abs/2006.14217)\].
 
 > In this article, we focus on the latent factor model for networks, a very general
 > approach which encompasses the latent distance model and the stochastic block-model as special cases. We
