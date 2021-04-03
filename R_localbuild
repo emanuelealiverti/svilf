@@ -1,0 +1,42 @@
+#!/bin/bash
+
+
+print_bord() {
+	printf %"$COLUMNS"s |tr " " "-"
+	echo $@
+	printf %"$COLUMNS"s |tr " " "-"
+}
+
+R_localbuild() {
+
+	if [ ! -d ./lib ]; then
+		print_bord "CREATING LIB DIRECTORY"
+		mkdir lib
+	else
+		print_bord "LIB DIRECTORY ALREADY EXISTS - cleaning"
+		rm -rf ./lib/$1
+	fi
+	rm -i log.txt
+	touch ./log.txt
+
+	oldd=$(pwd)
+	cd $1
+	print_bord "Compiling attributes"
+	R -q -e "Rcpp::compileAttributes(verbose=T)" | tee ../log.txt
+	#cd ..
+	cd $oldd
+	print_bord "BUILDING"
+
+	R CMD build --no-build-vignettes --no-manual $1 | tee log.txt
+	# get string from CMD build
+	ss=$(tail -1 log.txt | awk -F\‘ '{print $2}')
+
+	print_bord "BUILD SUCCESSFUL. REMOVING OLD PACKAGE AND INSTALLING"
+	R CMD REMOVE -l lib "$1"
+	R CMD INSTALL --no-docs --no-html -l lib ${ss%?} | tee log.txt
+	#cd $oldd
+
+}
+
+R_localbuild "$@"
+rm -i log.txt
