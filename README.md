@@ -1,6 +1,6 @@
 # Svilf: Stratified stochastic variational inference for high-dimensional network factor model	
 
-This repository is associated with the article: Aliverti, E. and Russo, M. (2020). Stratified stochastic variational inference for high-dimensional network factor model \[[link](https://arxiv.org/abs/2006.14217)\].
+This repository is associated with the article: Aliverti, E. and Russo, M. (2020). Stratified stochastic variational inference for high-dimensional network factor model \[[link](https://doi.org/10.1080/10618600.2021.1984929)\].
 
 > In this article, we focus on the latent factor model for networks, a very general
 > approach which encompasses the latent distance model and the stochastic block-model as special cases. We
@@ -19,4 +19,3 @@ The package provides wrappers around core `c++` implementations, relying on Armd
 Wrappers are written in `R` and provide easy tools to specify different options such as the maximum number of iterations, tolerance, starting values, step size sequence and others.
 All functions provide default configurations.
 
-The scripts in the folders `APPLICATION` and `SIMULATIONS` reproduce results from the paper, and are are set-up to use `./lib` as the local library folder.

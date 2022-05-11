@@ -9,10 +9,10 @@ using namespace arma;
  *
  */
 // [[Rcpp::export]]
-Rcpp::List svilf_interal_logit(const arma::sp_mat Y, 
-		const int H, 
-		const double prop = 2.0, 
-		const bool sample_adaptive = false, 
+Rcpp::List svilf_interal_logit(const arma::sp_mat Y,
+		const int H,
+		const double prop = 2.0,
+		const bool sample_adaptive = false,
 		const bool intercept = true,
 		const bool eigen_init= false,
 		const int get_samples = 0,
@@ -68,6 +68,7 @@ Rcpp::List svilf_interal_logit(const arma::sp_mat Y,
 	 * for printing
 	 */
 	int dotsL = consL();
+	dotsL = ((50) > (dotsL) ? (dotsL) : (50));
 	Rcpp::String star("*");
 	Rcpp::String bar("=");
 	for(int k = 0; k < dotsL-1; k++) {
@@ -112,8 +113,8 @@ Rcpp::List svilf_interal_logit(const arma::sp_mat Y,
 			 */
 			int nyi = accu(Y.row(curr_v));
 			int nyo = ((V - 1 - nyi) < std::floor(prop*nyi)) ? (V - 1 - nyi) : std::floor(prop*nyi);
-			int totS = nyi + nyo; 
-			N_n = ( V - 1 - nyi ) / nyo; 
+			int totS = nyi + nyo;
+			N_n = ( V - 1 - nyi ) / nyo;
 
 			//Rcpp::Rcout << "set zeros" << std::endl;
 			/*
@@ -129,7 +130,7 @@ Rcpp::List svilf_interal_logit(const arma::sp_mat Y,
 
 			/*
 			 * Reset working quantities
-			 * 
+			 *
 			 */
 			inner_iter = 1;
 			curr_diff = 99.0;
@@ -157,7 +158,7 @@ Rcpp::List svilf_interal_logit(const arma::sp_mat Y,
 				red_id_zeros = id_zeros.elem(arma::shuffle(id_red));
 			}
 
-			arma::uvec idJ = join_cols(id_ones, red_id_zeros);  
+			arma::uvec idJ = join_cols(id_ones, red_id_zeros);
 			// with this we are 100% sure to set the right size
 			totS = idJ.n_elem;
 
@@ -170,25 +171,25 @@ Rcpp::List svilf_interal_logit(const arma::sp_mat Y,
 				E_W_W.zeros();
 				for (int ind = 0; ind < totS;ind++){
 			//Rcpp::Rcout << "selecting index" << std::endl;
-					curr_j = idJ(ind); 
+					curr_j = idJ(ind);
 			//Rcpp::Rcout << "index selected" << std::endl;
 					W2 =  dot( E_W.row(curr_v), E_W.row(curr_j) ) * 2.0 * alpha;
 			//Rcpp::Rcout << "rows picked" << std::endl;
 					W2 = W2 * 2.0*alpha;
-					W2 += pow(alpha, 2.0); 
+					W2 += pow(alpha, 2.0);
 
 					W2 += accu( E_W2.slice(curr_v) % E_W2.slice( curr_j ) );
 			//Rcpp::Rcout << "slice picked" << std::endl;
 					Z(ind) = 0.5 * pow(W2, -0.5) * std::tanh(0.5 * pow(W2, 0.5));
-					Z(ind) = std::isfinite(Z(ind)) ? Z(ind) : 0.25; 
+					Z(ind) = std::isfinite(Z(ind)) ? Z(ind) : 0.25;
 			//Rcpp::Rcout << "id picked" << std::endl;
-					
 
-					//now we update the covariance function. 
+
+					//now we update the covariance function.
 					// take care of the fact that when we are accounting for zeros, then
 					// we should weight it
 					w = (ind < nyi) ? 1.0 : N_n;
-					E_W_W += ( w*E_W2.slice(curr_j) * Z(ind) ); 
+					E_W_W += ( w*E_W2.slice(curr_j) * Z(ind) );
 				}
 
 			//Rcpp::Rcout << "done inner loop" << std::endl;
@@ -199,7 +200,7 @@ Rcpp::List svilf_interal_logit(const arma::sp_mat Y,
 				for (int ind = 0; ind < totS; ind++){
 					w = (ind < nyi) ? 1.0 : N_n;
 					E_Wc.col(ind) = w * E_W.row( idJ(ind) ).t();
-					Yc(ind) = (ind < nyi) ? 0.5 : -0.5; 
+					Yc(ind) = (ind < nyi) ? 0.5 : -0.5;
 				}
 			//Rcpp::Rcout << "done weights" << std::endl;
 
@@ -214,7 +215,7 @@ Rcpp::List svilf_interal_logit(const arma::sp_mat Y,
 				old_mean = curr_mean;
 
 				curr_cov = curr_eta2.i();
-				curr_mean = curr_cov * curr_eta1; 
+				curr_mean = curr_cov * curr_eta1;
 				curr_diff = arma::accu(arma::pow(old_mean - curr_mean, 2)) / (curr_mean.n_elem ) ;
 
 
@@ -250,7 +251,7 @@ Rcpp::List svilf_interal_logit(const arma::sp_mat Y,
 	out["E_W"] = E_W;
 	//out["ew"] = E_W2;
 	out["a"] = alpha;
-	out["err"] = diff; 
+	out["err"] = diff;
 	if(get_samples > 1) {
 		Rcpp::Rcout << bar.get_cstring() << std::endl;
 		Rcpp::Rcout << "Sampling from approx posterior"<< std::endl;
@@ -274,13 +275,13 @@ Rcpp::List svilf_interal_logit(const arma::sp_mat Y,
 
 
 /*
- * PROBIT 
+ * PROBIT
  */
 // [[Rcpp::export]]
-Rcpp::List svilf_interal_probit(const arma::sp_mat Y, 
-		const int H, 
-		const double prop = 2.0, 
-		const bool sample_adaptive = false, 
+Rcpp::List svilf_interal_probit(const arma::sp_mat Y,
+		const int H,
+		const double prop = 2.0,
+		const bool sample_adaptive = false,
 		const bool intercept = true,
 		const bool eigen_init= false,
 		const int get_samples = 0,
@@ -337,6 +338,7 @@ Rcpp::List svilf_interal_probit(const arma::sp_mat Y,
 	 * for printing
 	 */
 	int dotsL = consL();
+	dotsL = ((50) > (dotsL) ? (dotsL) : (50));
 	Rcpp::String star("*");
 	Rcpp::String bar("=");
 	for(int k = 0; k < dotsL-1; k++) {
@@ -382,8 +384,8 @@ Rcpp::List svilf_interal_probit(const arma::sp_mat Y,
 			 */
 			int nyi = accu(Y.row(curr_v));
 			int nyo = ((V - 1 - nyi) < std::floor(prop*nyi)) ? (V - 1 - nyi) : std::floor(prop*nyi);
-			int totS = nyi + nyo; 
-			N_n = ( V - 1 - nyi ) / nyo; 
+			int totS = nyi + nyo;
+			N_n = ( V - 1 - nyi ) / nyo;
 
 			/*
 			 * Now we create the vector of sampled indexes as follows:
@@ -398,7 +400,7 @@ Rcpp::List svilf_interal_probit(const arma::sp_mat Y,
 
 			/*
 			 * Reset working quantities
-			 * 
+			 *
 			 */
 			inner_iter = 1;
 			curr_diff = 99.0;
@@ -420,14 +422,14 @@ Rcpp::List svilf_interal_probit(const arma::sp_mat Y,
 				curr_ids =  arma_sample(nyo, samp_pr);
 				red_id_zeros = id_zeros.elem(curr_ids);
 				N_n = pow( accu(samp_pr.elem(curr_ids)), -1.0);
-				
+
 			} else {
 				//uniform sampling (faster)
 				arma::uvec id_red = arma::regspace<arma::uvec>(0, nyo - 1);
 				red_id_zeros = id_zeros.elem(arma::shuffle(id_red));
 			}
 
-			arma::uvec idJ = join_cols(id_ones, red_id_zeros);  
+			arma::uvec idJ = join_cols(id_ones, red_id_zeros);
 			// with this we are 100% sure to set the right size
 			totS = idJ.n_elem;
 
@@ -438,17 +440,17 @@ Rcpp::List svilf_interal_probit(const arma::sp_mat Y,
 				arma::mat E_Wc(H,totS);
 				E_W_W.zeros();
 				for (int ind = 0; ind < totS;ind++){
-					curr_j = idJ(ind); 
+					curr_j = idJ(ind);
 					Y_tilde = (Y(curr_v, curr_j) == 0.0) ? -1.0 : 1.0;
 					W2 = alpha + dot( E_W.row(curr_v), E_W.row(curr_j) );
 					Z(ind) = W2 + Y_tilde * R::dnorm(W2,0.0,1.0,0) / R::pnorm(Y_tilde*W2, 0.0, 1.0, 1, 0);
-					Z(ind) = std::isfinite(Z(ind)) ? Z(ind) : 0; 
+					Z(ind) = std::isfinite(Z(ind)) ? Z(ind) : 0;
 
-					//now we update the covariance function. 
+					//now we update the covariance function.
 					// take care of the fact that when we are accounting for zeros, then
 					// we should weight it
 					w = (ind < nyi) ? 1.0 : N_n;
-					E_W_W += ( w * E_W2.slice(curr_j) ); 
+					E_W_W += ( w * E_W2.slice(curr_j) );
 					E_Wc.col(ind) = w * E_W.row( curr_j ).t();
 				}
 
@@ -464,7 +466,7 @@ Rcpp::List svilf_interal_probit(const arma::sp_mat Y,
 				old_mean = curr_mean;
 
 				curr_cov = curr_eta2.i();
-				curr_mean = curr_cov * curr_eta1; 
+				curr_mean = curr_cov * curr_eta1;
 				curr_diff = arma::accu(arma::pow(old_mean - curr_mean, 2)) / (curr_mean.n_elem ) ;
 
 
@@ -500,7 +502,7 @@ Rcpp::List svilf_interal_probit(const arma::sp_mat Y,
 	out["E_W"] = E_W;
 	//out["ew"] = E_W2;
 	out["a"] = alpha;
-	out["err"] = diff; 
+	out["err"] = diff;
 
 	if(get_samples > 1) {
 		Rcpp::Rcout << bar.get_cstring() << std::endl;
@@ -558,7 +560,7 @@ arma::vec eff_cross_lt(const arma::mat Y) {
 		for(int v = u+1; v < V; v++)
 		{
 			tt = Y.row(u) * (Y.row(v).t());
-			lt(id) = tt(0); 
+			lt(id) = tt(0);
 			id++;
 		}
 	}

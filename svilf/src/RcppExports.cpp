@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // svilf_interal_logit
 Rcpp::List svilf_interal_logit(const arma::sp_mat Y, const int H, const double prop, const bool sample_adaptive, const bool intercept, const bool eigen_init, const int get_samples, const double tau, const double kappa, const int maxit, const int maxit_inner, const int print_each, const double tol);
 RcppExport SEXP _svilf_svilf_interal_logit(SEXP YSEXP, SEXP HSEXP, SEXP propSEXP, SEXP sample_adaptiveSEXP, SEXP interceptSEXP, SEXP eigen_initSEXP, SEXP get_samplesSEXP, SEXP tauSEXP, SEXP kappaSEXP, SEXP maxitSEXP, SEXP maxit_innerSEXP, SEXP print_eachSEXP, SEXP tolSEXP) {
